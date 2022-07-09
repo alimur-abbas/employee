@@ -1,0 +1,50 @@
+
+services:
+  db:
+    container_name: mariadb_database
+    image: mysql:8.0.25
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - metrics-nw
+    volumes:
+      - /var/lib/mysql
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    environment:
+      - MYSQL_ROOT_PASSWORD=ali@1710
+      - AUTOHEAL_CONTAINER_LABEL=all
+    healthcheck:
+          test: [ "CMD", "mariadb-admin", "--protocol", "tcp" ,"ping" ]
+          timeout: 3m
+          interval: 10s
+          retries: 10
+    restart: always
+
+  backend:
+    container_name: spring-boot_backend
+    #image: alimurabaas17/employee-be:
+    build:
+      C:/Users/Alimur/Desktop/SpringBoot/employees
+
+    ports:
+      - "8080:8080"
+    networks:
+      - metrics-nw
+    restart: always
+    depends_on:
+      - db
+  frontend:
+      container_name: Angular_frontend
+      #image: alimurabaas17/employee-fe:latest
+      build:
+        C:/Users/Alimur/Desktop/Angular_projects/employee-CRUD-FE
+
+      depends_on:
+        - backend
+      ports:
+        - "4200:80"
+networks:
+  metrics-nw: {}
+
+

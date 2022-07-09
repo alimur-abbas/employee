@@ -1,28 +1,35 @@
 package com.example.SpringBootWebApi.Controller;
 
 import com.example.SpringBootWebApi.Model.Employee;
-import com.example.SpringBootWebApi.Model.Repository.EmployeeRepository;
+import com.example.SpringBootWebApi.Model.MessageModel;
+import com.example.SpringBootWebApi.Repository.EmployeeRepository;
+import com.example.SpringBootWebApi.service.TwilloMessageSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class EmployeeController {
+    @Autowired
+    private TwilloMessageSenderService twilloService;
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
     @GetMapping("/employees/ak")
     public String saySomething() {
         return "I am learning spring boot";
     }
+
     @GetMapping("/employees/default/values")
-    public Employee getDefault(){
-        Employee e = new Employee(1, UUID.randomUUID().toString(),"ALIMUR","ABBAS");
-            return e;
+    public Employee getDefault() {
+        Employee e = new Employee(1, UUID.randomUUID().toString(), "ALIMUR", "ABBAS");
+        return e;
     }
+
     @GetMapping("/employees/{uuid}")
     // uuid is your resource identifier.
     public Employee getEmployeeByUid(@PathVariable("uuid") String uid) {
@@ -48,10 +55,17 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employees/{uuid}") // uuid is your resource identifier.
-    public int deleteEmployeeByUid(@PathVariable("uuid") String uid) {
-        return employeeRepository.delete(uid);
+    public String deleteEmployeeByUid(@PathVariable("uuid") String uid) {
+        employeeRepository.delete(uid);
+        return "1 Row Deleted with uid:" + uid;
     }
 
+
+    @PostMapping("/sendSMS")
+    public String sendSMSByTwillo(@RequestBody MessageModel messageRequest) {
+        String sendMessageResponse = twilloService.sendMessage(messageRequest);
+        return sendMessageResponse;
+    }
 }
 
 

@@ -1,4 +1,4 @@
-package com.example.SpringBootWebApi;
+package com.example.SpringBootWebApi.init;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;

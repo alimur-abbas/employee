@@ -1,4 +1,4 @@
-package com.example.SpringBootWebApi.Model.Repository;
+package com.example.SpringBootWebApi.Repository;
 
 import com.example.SpringBootWebApi.Model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
